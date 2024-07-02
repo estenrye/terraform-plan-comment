@@ -102,6 +102,9 @@ export function internalRenderPlan(
   }
 
   // Partition changes for output formatting and extract resources
+  const readResources = structuredPlan.resource_changes
+    .filter((r) => r.change.actions.toString() === ['read'].toString())
+    .map((r) => r.address)
   const createdResources = structuredPlan.resource_changes
     .filter((r) => r.change.actions.toString() === ['create'].toString())
     .map((r) => r.address)
@@ -113,9 +116,6 @@ export function internalRenderPlan(
     .map((r) => r.address)
   const deletedResources = structuredPlan.resource_changes
     .filter((r) => r.change.actions.toString() === ['delete'].toString())
-    .map((r) => r.address)
-  const readResources = structuredPlan.resource_changes
-    .filter((r) => r.change.actions.toString() === ['read'].toString())
     .map((r) => r.address)
 
   return {
