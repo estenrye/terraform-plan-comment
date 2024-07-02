@@ -7,6 +7,7 @@ export type RenderedPlan = {
   updatedResources?: Record<string, string>
   recreatedResources?: Record<string, string>
   deletedResources?: Record<string, string>
+  readResources?: Record<string, string>
 }
 
 type ResourceContent = {
@@ -113,12 +114,16 @@ export function internalRenderPlan(
   const deletedResources = structuredPlan.resource_changes
     .filter((r) => r.change.actions.toString() === ['delete'].toString())
     .map((r) => r.address)
+  const readResources = structuredPlan.resource_changes
+    .filter((r) => r.change.actions.toString() === ['read'].toString())
+    .map((r) => r.address)
 
   return {
     createdResources: extractResources(createdResources, humanReadablePlan),
     updatedResources: extractResources(updatedResources, humanReadablePlan),
     recreatedResources: extractResources(recreatedResources, humanReadablePlan),
-    deletedResources: extractResources(deletedResources, humanReadablePlan)
+    deletedResources: extractResources(deletedResources, humanReadablePlan),
+    readResources: extractResources(readResources, humanReadablePlan)
   }
 }
 

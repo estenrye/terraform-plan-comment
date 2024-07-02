@@ -17,18 +17,25 @@ function renderBody(plan: RenderedPlan): string {
     !plan.createdResources &&
     !plan.recreatedResources &&
     !plan.updatedResources &&
-    !plan.deletedResources
+    !plan.deletedResources &&
+    !plan.readResources
   ) {
     return '**→ No Resource Changes!**'
   }
 
   let body =
     '**→ Resource Changes: ' +
+    `${Object.keys(plan.readResources ?? {}).length} to read, ` +
     `${Object.keys(plan.createdResources ?? {}).length} to create, ` +
     `${Object.keys(plan.updatedResources ?? {}).length} to update, ` +
     `${Object.keys(plan.recreatedResources ?? {}).length} to re-create, ` +
     `${Object.keys(plan.deletedResources ?? {}).length} to delete.**`
 
+  if (plan.readResources) {
+    body += '\n\n### 📖 Read'
+    body += renderResources(plan.readResources)
+  }
+  
   if (plan.createdResources) {
     body += '\n\n### ✨ Create'
     body += renderResources(plan.createdResources)
